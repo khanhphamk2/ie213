@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
+import Card from "react-bootstrap/Card";
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 
@@ -52,6 +53,30 @@ const MoviesList = props => {
         setSearchRating(searchRating);
     }
 
+    const find = (query, by) => {
+        MovieDataService.find(query, by)
+            .then(response => {
+                console.log(response.data);
+                setMovies(response.data.movies);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+    }
+
+    const findByTitle = () => {
+        find(searchTitle, "title");
+    }
+
+    const findByRating = () => {
+        if (searchRating === "All Ratings") {
+            retrieveMovies();
+        }
+        else {
+            find(searchRating, "rated");
+        }
+    }
+
     return (
         <div className="App">
             <Container>
@@ -80,7 +105,7 @@ const MoviesList = props => {
                                     as="select" onChange={onChangeSearchRating} >
                                     {ratings.map(rating => {
                                         return (
-                                            <option value={rating}>{rating}</option>
+                                            <option key={rating} value={rating}>{rating}</option>
                                         )
                                     })}
                                 </Form.Control>
@@ -98,9 +123,9 @@ const MoviesList = props => {
                 <Row>
                     {movies.map((movie) => {
                         return (
-                            <Col>
+                            <Col key={movie}>
                                 <Card style={{ width: '18rem' }}>
-                                    <Card.Img src={movie.poster + "/100px180"}/>
+                                    <Card.Img src={movie.poster + "/100px180"} />
                                     <Card.Body>
                                         <Card.Title>{movie.title}</Card.Title>
                                         <Card.Text>
@@ -114,7 +139,9 @@ const MoviesList = props => {
                         );
                     })}
                 </Row>
-        </Container>
+            </Container>
         </div>
     );
 }
+
+export default MoviesList;
