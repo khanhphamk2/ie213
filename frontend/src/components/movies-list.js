@@ -30,7 +30,6 @@ const MoviesList = props => {
     }, [currentSearchMode]);
 
     useEffect(() => {
-        //retrieveMovies();
         retrieveNextPage();
     }, [currentPage]);
 
